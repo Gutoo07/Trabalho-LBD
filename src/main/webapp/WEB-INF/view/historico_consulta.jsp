@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
     <title>Histórico de Consultas</title>
@@ -16,7 +17,9 @@
         <h2>Histórico de Consultas</h2>
         <table border="1">
             <tr><th>Data</th><th>Especialidade</th><th>Médico</th></tr>
-            <tr><td>2025-03-01</td><td>Ortopedia</td><td>Dr. Silva</td></tr>
+			<c:forEach var="consulta" items="${lista_consulta}">
+	            <tr><td>${consulta.getDia()}</td><td>${consulta.getHora().substring(0,5)}</td><td><fmt:formatNumber value="${consulta.valor}" type="currency" currencySymbol="R$ " groupingUsed="true" maxFractionDigits="2" /></td></tr>
+			</c:forEach>
         </table>
     </form>
     </div>
