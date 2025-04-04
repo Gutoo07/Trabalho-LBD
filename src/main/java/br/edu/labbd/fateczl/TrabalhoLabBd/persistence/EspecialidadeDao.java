@@ -17,8 +17,12 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
 
 @Repository
 public class EspecialidadeDao {
-	
-	private GenericDAO gDAO = new GenericDAO();
+	private GenericDAO gDAO;
+
+	//SOLID: Inversao de Dependencia
+	public EspecialidadeDao(GenericDAO gDAO) {
+		this.gDAO = gDAO;
+	}
 
 	public Especialidade getById(int id) throws SQLException, ClassNotFoundException{
 		Connection con = gDAO.getConnection();
@@ -39,7 +43,37 @@ public class EspecialidadeDao {
 	
 		return especialidade;
 	}
-	
-
-	
+	public List<Especialidade> getAll() throws SQLException, ClassNotFoundException {
+		Connection con = gDAO.getConnection();
+		String SQL = "SELECT * FROM especialidade";
+		PreparedStatement stm = con.prepareStatement(SQL);
+		ResultSet rs = stm.executeQuery();
+		
+		List<Especialidade> lista = new ArrayList<>();
+		while (rs.next()) {
+			Especialidade especialidade = new Especialidade();
+			especialidade.setId(rs.getInt("id"));
+			especialidade.setNome(rs.getString("nome"));
+			lista.add(especialidade);
+		}
+		rs.close();
+		stm.close();
+		con.close();
+		return lista;
+	}
+	public Object getIdByNome(String nome)  throws SQLException, ClassNotFoundException {
+		Connection con = gDAO.getConnection();
+		String SQL = "SELECT id FROM especialidade WHERE nome = ?";
+		PreparedStatement stm = con.prepareStatement(SQL);
+		stm.setString(1, nome);
+		ResultSet rs = stm.executeQuery();
+		if (rs.next()) {
+			int especialidadeId = rs.getInt("id");
+			rs.close();
+			stm.close();
+			con.close();
+			return especialidadeId;
+		}
+		return null;
+	}	
 }

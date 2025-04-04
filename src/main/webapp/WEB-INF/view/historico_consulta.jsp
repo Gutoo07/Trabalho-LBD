@@ -13,7 +13,7 @@
 <body>
     <div class="body_div">
    	<jsp:include page="menu_cliente.jsp"></jsp:include>
-    <form>
+    <form action="/visualizar">
         <h2>Histórico de Consultas</h2>
         <table border="1">
             <tr><th>Data</th><th>Especialidade</th><th>Médico</th></tr>

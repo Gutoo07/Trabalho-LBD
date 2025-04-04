@@ -25,12 +25,16 @@
             <th>Hora</th>
         </tr>
         <!--FOREACH-->
-        <tr>
-            <td>Teste</td>
-            <td>Dr. Fulano</td>
-            <td>Cardiologia</td>
-            <td>02/04/2025</td>
-            <td>10:00</td></tr>
+        <c:forEach var="consulta" items="${lista_consulta}">
+            <tr>
+            	<td>${consulta.getClienteRg().getNome()}</td>
+            	<td>${consulta.getMedicoRg().getNome()}</td>
+            	<td>${consulta.getMedicoRg().getEspecialidade().getNome()}</td>
+            	<td>${consulta.getDia()}</td>
+            	<td>${consulta.getHora()}</td>
+        	<tr>
+    	</c:forEach>
+            
     </table>
     </form>
     </div>

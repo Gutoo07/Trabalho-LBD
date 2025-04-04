@@ -596,86 +596,77 @@ as
 
 --=============================================================
 
-create procedure sp_consulta	(@opc char(1), @cliente_rg char(9), @senha varchar(35),
-								@especialidade varchar(30), @dia date, @hora time,
+create procedure sp_consulta	(@opc char(1), @cliente_rg char(9),
+								@especialidade int, @dia date, @hora time,
 								@particular bit, @codigo_autorizacao varchar(5),
 								@saida varchar(100) output)
 as
 	if (upper(@opc) = 'I')
 	begin
-		declare @login_valido int
-		exec sp_valida_login @cliente_rg, @senha, @login_valido output
-		if (@login_valido = 0)
+		--testa se a data escolhida eh de no minimo daqui 30 dias
+		if ( (datediff(day, @dia, getdate() + 30)) < 0)
 		begin
-			raiserror('Erro ao Cadastrar Consulta: RG e/ou senha invalido(s).', 16, 1)
+			raiserror('Erro ao Cadastrar Consulta: a data escolhida ultrapassa o intervalo maximo de 30 dias a partir de hoje.', 16, 1)
 		end
 		else
 		begin
-			--testa se a data escolhida eh de no minimo daqui 30 dias
-			if ( (datediff(day, @dia, getdate() + 30)) < 0)
+			declare @medico_rg char(9),
+			@periodo varchar(5),
+			@valor	decimal(7,2)
+
+			--achar medico que trabalha no Turno respectivo � @hora solicitada
+			if (@hora < '11:00')--Periodo Manha
 			begin
-				raiserror('Erro ao Cadastrar Consulta: a data escolhida ultrapassa o intervalo maximo de 30 dias a partir de hoje.', 16, 1)
+				set @periodo = 'Manhã'
+			end
+			else if (@hora < '16:00')--Periodo Tarde
+			begin
+				set @periodo = 'Tarde'
+			end
+			else if (@hora < '21:00')--Periodo Noite
+			begin
+				set @periodo = 'Noite'
+			end
+
+			set @medico_rg = --medico aleatorio que nao tenha consulta nesse dia nessa hora
+			(select top 1 percent rg from medico where periodo = @periodo and especialidade = @especialidade and rg not in
+			(select medicoRg from consulta where dia = @dia and hora = @hora)
+			order by newid())
+
+			if (@medico_rg is null)--nao tem medico disponivel nessas condicoes
+			begin
+				raiserror('Erro ao Cadastrar Consulta: Nao ha medicos disponiveis; tente outro horario.', 16, 1)
 			end
 			else
-			begin
-				declare @medico_rg char(9),
-				@periodo varchar(5),
-				@valor	decimal(7,2)
-
-				--achar medico que trabalha no Turno respectivo � @hora solicitada
-				if (@hora < '11:00')--Periodo Manha
+			begin		
+				--decidir o valor: se a consulta eh retorno ou nao
+				if ((select top 1 valor from consulta c
+					inner join medico m
+					on c.medicoRg = m.rg
+					where m.especialidade = @especialidade
+					and c.clienteRg = @cliente_rg
+					and (datediff(day, getdate() - 30, c.dia) >= 0)
+					order by c.id desc) > 0.0)
 				begin
-					set @periodo = 'Manha'
-				end
-				else if (@hora < '16:00')--Periodo Tarde
-				begin
-					set @periodo = 'Tarde'
-				end
-				else if (@hora < '21:00')--Periodo Noite
-				begin
-					set @periodo = 'Noite'
-				end
-
-				set @medico_rg = --medico aleatorio que nao tenha consulta nesse dia nessa hora
-				(select top 1 percent rg from medico where periodo = @periodo and especialidade = @especialidade and rg not in
-				(select medicoRg from consulta where dia = @dia and hora = @hora)
-				order by newid())
-
-				if (@medico_rg is null)--nao tem medico disponivel nessas condicoes
-				begin
-					raiserror('Erro ao Cadastrar Consulta: Nao ha medicos disponiveis; tente outro horario.', 16, 1)
+					set @valor = 0.0
 				end
 				else
-				begin		
-					--decidir o valor: se a consulta eh retorno ou nao
-					if ((select top 1 valor from consulta c
-						inner join medico m
-						on c.medicoRg = m.rg
-						where m.especialidade = @especialidade
-						and c.clienteRg = @cliente_rg
-						and (datediff(day, getdate() - 30, c.dia) >= 0)
-						order by c.id desc) > 0.0)
+				begin
+					set @valor = (select valor_consulta from medico where rg = @medico_rg)
+					--se for pelo Plano de Saude, o Plano para 50% do valor, por exemplo
+					if (@particular = 1)
 					begin
-						set @valor = 0.0
+						set @valor = @valor * 0.5
 					end
-					else
-					begin
-						set @valor = (select valor_consulta from medico where rg = @medico_rg)
-						--se for pelo Plano de Saude, o Plano para 50% do valor, por exemplo
-						if (@particular = 1)
-						begin
-							set @valor = @valor * 0.5
-						end
-					end
-					begin try
-						insert into consulta values
-						(@cliente_rg, @medico_rg, @dia, @hora, @particular, @valor, @codigo_autorizacao)
-						set @saida = 'Consulta com medico de RG: '+@medico_rg+', as '+cast(@hora as varchar(5))+' em '+convert(char(10), @dia, 103)+'.'
-					end try
-					begin catch
-						raiserror('Erro desconhecido ao Cadastrar Consulta', 16, 1)
-					end catch
 				end
+				begin try
+					insert into consulta values
+					(@cliente_rg, @medico_rg, @dia, @hora, @particular, @valor, @codigo_autorizacao)
+					set @saida = 'Consulta com medico de RG: '+@medico_rg+', as '+cast(@hora as varchar(5))+' em '+convert(char(10), @dia, 103)+'.'
+				end try
+				begin catch
+					raiserror('Erro desconhecido ao Cadastrar Consulta', 16, 1)
+				end catch
 			end
 		end
 	end
@@ -684,76 +675,25 @@ as
 		raiserror('Opcao invalida', 16, 1)
 	end
 
---testes
-select c.id as consulta, c.medicoRg as medico, c.clienteRg as cliente, m.especialidade, convert(char(10),c.dia,103) as dia, cast(c.hora as varchar(5)) as hora, c.valor as valor
-from consulta c
-inner join medico m
-on c.medicoRg = m.rg
-order by c.id desc
+--===============================================================================
 
-select * from consulta
-select * from cliente
+create procedure sp_ver_consultas_medico (@rg char(9))
+as
+	select c.id as consulta_id, c.particular, c.valor, c.cod_autorizacao, m.nome as nome_medico, cl.nome as nome_cliente, e.nome as nome_especialidade, convert(char(10),c.dia, 103) as dia, cast(c.hora as varchar(5)) as hora
+	from consulta c
+	inner join medico m
+	on c.medicoRg = m.rg
+	inner join especialidade e
+	on m.especialidade = e.id
+	inner join cliente cl
+	on c.clienteRg = cl.rg
+	where m.rg = @rg
 
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '29/03/2025', '10:00', 0, null, @saida output
-print @saida
+exec sp_ver_consultas_medico '443442356'
 
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '30/03/2025', '18:00', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '31/03/2025', '12:00', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '27/04/2025', '09:00', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '27/04/2025', '12:00', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '27/04/2025', '08:00', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '27/04/2025', '08:30', 0, null, @saida output
-print @saida
-
-declare @saida  varchar(100)
-exec sp_cliente 'i', '197833135', 'Lucas', '11922334455', '07/07/1993', 'luquinhas123', @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '197833135', 'luquinhas123', 1, '25/04/2025', '08:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '197833135', 'luquinhas123', 1, '26/04/2025', '08:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '197833135', 'luquinhas123', 2, '26/04/2025', '09:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '27/04/2025', '11:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 2, '27/04/2025', '18:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 2, '27/04/2025', '19:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '25/04/2025', '19:30', 0, null, @saida output
-print @saida
-
-declare @saida varchar(100)
-exec sp_consulta 'i', '311425471', 'senhamarcelo333', 1, '26/04/2025', '19:30', 1, null, @saida output
-print @saida
+SELECT * FROM cliente
+SELECT * FROM especialidade
+SELECT * FROM medico
+SELECT * FROM material
+SELECT * FROM consulta
+SELECT * FROM consulta_material
