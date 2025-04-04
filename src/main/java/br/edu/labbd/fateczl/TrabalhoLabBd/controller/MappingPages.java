@@ -44,7 +44,7 @@ public class MappingPages {
 			return "404";
 		}
 		ConsultaDao db = new ConsultaDao(gDAO);
-		List<Consulta> consultas = db.sp_ver_consultas_medico(rg);
+		List<Consulta> consultas = db.sp_ver_consultas(rg);
 		model.addAttribute("lista_consulta", consultas);
 		return "visualizar_consultas";
 	}
@@ -57,7 +57,7 @@ public class MappingPages {
 			return "404";
 		}
 		ConsultaDao db = new ConsultaDao(gDAO);
-		List<Consulta> consultas = db.getAllById(rg);
+		List<Consulta> consultas = db.sp_ver_consultas(rg);
 		
 		
 		//new Consulta().getMedicoRg().getNome();

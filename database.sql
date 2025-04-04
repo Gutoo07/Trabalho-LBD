@@ -677,7 +677,7 @@ as
 
 --===============================================================================
 
-create procedure sp_ver_consultas_medico (@rg char(9))
+create procedure sp_ver_consultas (@rg char(9))
 as
 	select c.id as consulta_id, c.particular, c.valor, c.cod_autorizacao, m.nome as nome_medico, cl.nome as nome_cliente, e.nome as nome_especialidade, convert(char(10),c.dia, 103) as dia, cast(c.hora as varchar(5)) as hora
 	from consulta c
@@ -687,9 +687,11 @@ as
 	on m.especialidade = e.id
 	inner join cliente cl
 	on c.clienteRg = cl.rg
-	where m.rg = @rg
+	where m.rg = @rg or cl.rg = @rg
 
-exec sp_ver_consultas_medico '443442356'
+exec sp_ver_consultas '987654321'
+
+--===============================================================================
 
 SELECT * FROM cliente
 SELECT * FROM especialidade
