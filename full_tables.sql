@@ -1,0 +1,25 @@
+SELECT * FROM cliente
+SELECT * FROM especialidade
+SELECT * FROM medico
+SELECT * FROM material
+SELECT * FROM consulta
+SELECT * FROM consulta_material
+
+--
+
+INSERT INTO cliente VALUES('123456789','Kevin','40028922','19/06/2004','12345678x')
+INSERT INTO cliente VALUES('987654321','Gustavo','89224002','31/12/2004','987654321x')
+
+INSERT INTO especialidade VALUES (1,'Neurologista')
+INSERT INTO especialidade VALUES (2,'Ortopedista')
+
+INSERT INTO medico VALUES('40028922','Yudi','40028922','Manhã',150.0,1,'40028922x')
+INSERT INTO medico VALUES('40028921','Priscila','40028921','Manhã',1500.0,2,'40028922x')
+INSERT INTO medico VALUES('40028920','Patricia','40028920','Tarde',2500.0,1,'40028922x')
+INSERT INTO medico VALUES('40028919','Larissa','40028919','Tarde',1500.0,2,'40028922x')
+
+INSERT INTO material VALUES(1,'Palito',10.0)
+INSERT INTO material VALUES(2,'Seringa',15.0)
+
+INSERT INTO consulta VALUES('123456789','40028919','02/04/2025','08:00',0,1500.0,'X0001')
+INSERT INTO consulta VALUES('987654321','40028922','01/04/2025','12:00',0,150.0,'X0002')

@@ -142,29 +142,7 @@ exec sp_valida_senha 'senhabcd', @valido output
 print @valido
 
 --=============================================================
---PROCEDURE DE VALIDAR LOGIN ANTIGA (NAO VALIDA MEDICO/CLIENTE)
-create procedure sp_valida_login (@rg char(9), @senha varchar(35), @login_valido int output)
-as
-	if ((select rg from cliente where rg = @rg) is null)
-	begin
-		set @login_valido = 0 --primeiro erro: RG nao cadastrado
-	end
-	else if (@senha is null)
-	begin
-		set @login_valido = 2
-	end
-	else --se houver um RG cadastrado
-	begin
-		if ((select senha from cliente where rg = @rg) != @senha)
-		--se a senha for incorreta
-		begin
-			set @login_valido = 2
-		end
-		else --se a senha for correta
-		begin
-			set @login_valido = 1
-		end
-	end
+
 	
 --testes
 declare @valido int
@@ -644,7 +622,7 @@ as
 				@periodo varchar(5),
 				@valor	decimal(7,2)
 
-				--achar medico que trabalha no Turno respectivo à @hora solicitada
+				--achar medico que trabalha no Turno respectivo ï¿½ @hora solicitada
 				if (@hora < '11:00')--Periodo Manha
 				begin
 					set @periodo = 'Manha'
