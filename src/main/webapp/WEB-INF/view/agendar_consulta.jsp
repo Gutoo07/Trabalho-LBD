@@ -6,19 +6,11 @@
     <title>Cadastro de Consulta</title>
     <link rel="stylesheet" href="/resources/css/styles.css">
     <link rel="stylesheet" href="/resources/css/menu.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="body_div">
-        <div class="navbar">
-            <div class="menu">
-                <a href="index.html">Home</a>
-                <a href="consultas.html">Consultas</a>
-                <a href="historico.html">Histórico</a>
-            </div>
-            <div>
-                <a href="logout.html">Sair</a>
-            </div>
-        </div>
+		<jsp:include page="menu_cliente.jsp"></jsp:include>	
     <form>
 		<h1></h1>
         <h2>Agendar Consulta</h2>
