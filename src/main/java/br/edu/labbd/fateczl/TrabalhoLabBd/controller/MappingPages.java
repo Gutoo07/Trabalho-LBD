@@ -35,8 +35,8 @@ public class MappingPages {
 	
 	//MÉDICO
 	@GetMapping("/visualizar")
-	public String visualizar_consulta(@CookieValue(value = "tipo", defaultValue = "desconhecido") String cookie) {
-		if(!cookie.equals("medico")){
+	public String visualizar_consulta(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo) {
+		if(!tipo.equals("medico")){
 			return "404";
 		}
 		return "visualizar_consultas";
@@ -45,26 +45,30 @@ public class MappingPages {
 	
 	//CLIENTE
 	@GetMapping("/consultas")
-	public String consultas(@CookieValue(value = "tipo", defaultValue = "desconhecido") String cookie, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
-		if(!cookie.equals("cliente")){
+	public String consultas(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo,@CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
+		if(!tipo.equals("cliente")){
 			return "404";
 		}
 		
 		ConsultaDao db = new ConsultaDao();
-		List<Consulta> consultas = db.getAllById();
+		List<Consulta> consultas = db.getAllById(rg);
 		
+		
+		//new Consulta().getMedicoRg().getNome();
 		//Debug pra teste pode apagar dps, inclusive o parametro passado na função
 		System.out.println(request.getHeader("Cookie"));
 		
 		model.addAttribute("lista_consulta", consultas);
+		
+	
 		
 		
 		return "historico_consulta";
 	}
 	
 	@GetMapping("/agendar")
-	public String agendar(@CookieValue(value = "tipo", defaultValue = "desconhecido") String cookie, Model model) {
-		if(!cookie.equals("cliente")){
+	public String agendar(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, Model model) {
+		if(!tipo.equals("cliente")){
 			return "404";
 		}
 		List<String> lista = new ArrayList<String>();

@@ -14,30 +14,30 @@ import org.springframework.stereotype.Repository;
 
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Consulta;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 
 @Repository
-public class EspecialidadeDao {
+public class MedicoDao {
 	
 	private GenericDAO gDAO = new GenericDAO();
 
-	public Especialidade getById(int id) throws SQLException, ClassNotFoundException{
+	public Medico getById(String rg) throws SQLException, ClassNotFoundException{
 		Connection con = gDAO.getConnection();
-		String sql = "SELECT * FROM especialidade WHERE id = ?";
+		String sql = "SELECT * FROM medico WHERE rg = ?";
 		PreparedStatement stm = con.prepareStatement(sql);
-		stm.setInt(1, id);
+		stm.setString(1, rg);
 		
-		Especialidade especialidade = new Especialidade();
+		
+		Medico medico = new Medico();
 		ResultSet rs = stm.executeQuery();
 		if (rs.next()) {
-			especialidade.setId(rs.getInt("id"));
-			especialidade.setNome(rs.getString("nome"));
-
+			medico.setNome(rs.getString("nome"));
 		}
 		rs.close();
 		stm.close();
 		con.close();
 	
-		return especialidade;
+		return medico;
 	}
 	
 
