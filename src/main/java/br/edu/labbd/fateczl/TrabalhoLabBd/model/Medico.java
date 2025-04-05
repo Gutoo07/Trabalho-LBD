@@ -15,6 +15,7 @@ public class Medico {
 	private String periodo;
 	private double valor_consulta;	
 	private Especialidade especialidade;
+	private String senha;
 	
 	public String getRg() {
 		return rg;
@@ -51,6 +52,12 @@ public class Medico {
 	}
 	public void setEspecialidade(Especialidade especialidade) {
 		this.especialidade = especialidade;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	

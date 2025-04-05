@@ -83,5 +83,18 @@ public class MappingPages {
 		model.addAttribute("listaEspecialidade",lista);
 		return "agendar_consulta";
 	}
-
+	@GetMapping("medicos")
+	public String cadastrarMedico(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, @CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
+		System.out.println("Retornar pagina de Cadastro de Medico");
+		
+		if(!tipo.equals("medico")){
+			return "404";
+		}
+		
+		EspecialidadeDao eDao = new EspecialidadeDao(gDAO);
+		List<Especialidade> lista = eDao.getAll();
+		model.addAttribute("listaEspecialidade",lista);
+		
+		return "cadastrar_medico";
+	}
 }

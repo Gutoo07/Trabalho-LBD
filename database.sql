@@ -353,6 +353,7 @@ print @saida
 select * from cliente
 
 --=============================================================
+select * from medico
 
 create procedure sp_medico	(@opc char(1), @rg char(9), @nome varchar(100), @telefone varchar(11), @periodo varchar(5),
 							@valor_consulta decimal(7,2), @especialidade int, @senha varchar(35), @saida varchar(100) output)

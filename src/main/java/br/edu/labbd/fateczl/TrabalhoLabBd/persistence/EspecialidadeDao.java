@@ -76,4 +76,21 @@ public class EspecialidadeDao {
 		}
 		return null;
 	}	
+	public Especialidade getByNome(String nome)  throws SQLException, ClassNotFoundException {
+		Connection con = gDAO.getConnection();
+		String SQL = "SELECT * FROM especialidade WHERE nome = ?";
+		PreparedStatement stm = con.prepareStatement(SQL);
+		stm.setString(1, nome);
+		ResultSet rs = stm.executeQuery();
+		if (rs.next()) {
+			Especialidade especialidade = new Especialidade();
+			especialidade.setId(rs.getInt("id"));
+			especialidade.setNome(rs.getString("nome"));
+			rs.close();
+			stm.close();
+			con.close();
+			return especialidade;
+		}
+		return null;	
+	}
 }
