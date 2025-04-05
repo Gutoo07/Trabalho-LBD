@@ -13,7 +13,8 @@
     <div class="navbar">
         <div class="menu">
             <a href="/visualizar">Inicio</a>
-            <a href="cadastro_paciente.html">Clientes</a>
+            <a href="/clientes">Clientes</a>
+            <!-- <a href="cadastro_paciente.html">Clientes</a> -->
             <a href="/medicos">Médicos</a>
             <!-- <a href="cadastro_medico.html">Médicos</a>  -->
             <a href="cadastro_especialidade.html">Especialidades</a>

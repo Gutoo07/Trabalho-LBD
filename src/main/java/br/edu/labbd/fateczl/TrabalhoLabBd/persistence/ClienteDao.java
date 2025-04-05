@@ -18,15 +18,13 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 @Repository
 public class ClienteDao implements IDAO<Cliente> {
 	
-	@Autowired
-	private GenericDAO gDAO = new GenericDAO();
+	private GenericDAO gDAO;
 	
-	/*private GenericDAO gDAO;
-	
-	public ClienteDao(GenericDAO gDAO) {
+	//SOLID: Inversao de dependencia
+	public ClienteDao (GenericDAO gDAO) {
 		this.gDAO = gDAO;
-	}*/
-
+	}
+	
 	@Override
 	public String inserir(Cliente c) throws SQLException, ClassNotFoundException {
 		Connection con = gDAO.getConnection();

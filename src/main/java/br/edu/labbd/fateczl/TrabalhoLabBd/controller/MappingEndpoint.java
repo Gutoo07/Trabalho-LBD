@@ -1,6 +1,7 @@
 package br.edu.labbd.fateczl.TrabalhoLabBd.controller;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.AuthDao;
+import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ClienteDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ConsultaDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.EspecialidadeDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.GenericDAO;
@@ -104,7 +107,6 @@ public class MappingEndpoint {
 		}
 		if (acao.equalsIgnoreCase("Inserir") || acao.equalsIgnoreCase("Atualizar")) {
 			medico.setNome(nome);
-			medico.setNome(nome);
 			medico.setTelefone(telefone);
 			medico.setPeriodo(periodo);
 			medico.setValor_consulta(Double.parseDouble(valorConsulta));
@@ -176,6 +178,58 @@ public class MappingEndpoint {
 			model.addAttribute("medicos", medicos);
 		}
 		return "cadastrar_medico";
+	}
+	@PostMapping("/crudClientePost")
+	public String crudClientePost(@RequestParam Map<String, String> params, HttpServletResponse response, Model model) throws SQLException, ClassNotFoundException {
+		ClienteDao cDao = new ClienteDao(gDAO);
+		
+		String saida = "";
+		String erro = "";
+		String acao = params.get("botao");		
+		String rg = params.get("rg");
+		String nome = params.get("nome");
+		String telefone = params.get("telefone");
+		String dt_nasc = params.get("dataNascimento");
+		String senha = params.get("senha");
+		
+		
+		Cliente cliente = new Cliente();
+		List<Cliente> clientes = new ArrayList<>();
+		if (!acao.equalsIgnoreCase("Listar")) {
+			cliente.setRg(rg);
+		}
+		if (acao.equalsIgnoreCase("Inserir") || acao.equalsIgnoreCase("Atualizar")) {
+			cliente.setNome(nome);
+			cliente.setTelefone(telefone);
+			cliente.setDt_nasc(LocalDate.parse(dt_nasc));
+			cliente.setSenha(senha);
+		}
+		
+		try {
+			if (acao.equalsIgnoreCase("Inserir")) {
+				saida = cDao.inserir(cliente);
+			}
+			if (acao.equalsIgnoreCase("Atualizar")) {
+				saida = cDao.atualizar(cliente);
+			}
+			if (acao.equalsIgnoreCase("Excluir")) {
+				saida = cDao.excluir(cliente);
+			}
+			if (acao.equalsIgnoreCase("Buscar")) {
+				cliente = cDao.buscar(cliente);
+			}
+			if (acao.equalsIgnoreCase("Listar")) {
+				clientes = cDao.listar();
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			erro = e.getMessage();
+		} finally {
+			model.addAttribute("saida", saida);
+			model.addAttribute("erro", erro);
+			model.addAttribute("cliente", cliente);
+			model.addAttribute("clientes", clientes);
+		}
+		return "cadastrar_cliente";
 	}
 		
 }
