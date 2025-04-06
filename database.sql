@@ -270,20 +270,33 @@ as
 				end
 				else--se o RG eh valido
 				begin
-					exec sp_valida_senha @senha, @senha_valida output
-					if (@senha_valida = 0)
-					begin --se o comprimento da senha foi invalido
-						raiserror('Erro ao Inserir Cliente: comprimendo da senha invalido.', 16, 1)
-					end
-					else if (@senha_valida = 2) --se a senha nao tem pelo menos 1 numero
+					declare @idade_valida int
+					exec sp_valida_idade @dt_nasc, @idade_valida output
+					if (@idade_valida = 0)
 					begin
-						raiserror('Erro ao Inserir Cliente: a senha deve conter pelo menos um (1) numero.', 16 ,1)
+						raiserror('Erro: Data de nascimento em branco', 16, 1)
 					end
-					else -- se a senha foi valida
+					else if (@idade_valida = 2)
 					begin
-						insert into cliente values
-						(@rg, @nome, @telefone, @dt_nasc, @senha)
-						set @saida = 'Cliente '+@nome+' inserido(a) com sucesso.'
+						raiserror('Erro: Cliente menor de idade', 16, 1)
+					end
+					else
+					begin
+						exec sp_valida_senha @senha, @senha_valida output
+						if (@senha_valida = 0)
+						begin --se o comprimento da senha foi invalido
+							raiserror('Erro ao Inserir Cliente: comprimento da senha invalido.', 16, 1)
+						end
+						else if (@senha_valida = 2) --se a senha nao tem pelo menos 1 numero
+						begin
+							raiserror('Erro ao Inserir Cliente: a senha deve conter pelo menos um (1) numero.', 16 ,1)
+						end
+						else -- se a senha foi valida
+						begin
+							insert into cliente values
+							(@rg, @nome, @telefone, @dt_nasc, @senha)
+							set @saida = 'Cliente '+@nome+' inserido(a) com sucesso.'
+						end
 					end
 				end
 			end			
@@ -323,10 +336,14 @@ as
 				end
 			end
 		end
-		else
+		else 
 		begin
 			raiserror('Erro ao atualizar: RG nao foi especificado', 16 ,1)
 		end
+	end
+	else if (upper(@opc) ='D')
+	begin
+		raiserror('Erro: não é permitida a exclusão de Clientes', 16 ,1)
 	end
 	else
 	begin
