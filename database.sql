@@ -1,4 +1,4 @@
-create database LabBD
+﻿create database LabBD
 go
 use LabBD
 --================================================
@@ -596,6 +596,84 @@ as
 	end
 
 --=============================================================
+create procedure sp_consulta	(@opc char(1), @cliente_rg char(9),
+								@especialidade int, @dia date, @hora time,
+								@particular bit, @codigo_autorizacao varchar(5),
+								@saida varchar(100) output)
+as
+	if (upper(@opc) = 'I')
+	begin
+		--testa se a data escolhida eh de no minimo daqui 30 dias
+		if ( (datediff(day, @dia, getdate() + 30)) < 0)
+		begin
+			raiserror('Erro ao Cadastrar Consulta: a data escolhida ultrapassa o intervalo maximo de 30 dias a partir de hoje.', 16, 1)
+		end
+		else
+		begin
+			declare @medico_rg char(9),
+			@periodo varchar(5),
+			@valor	decimal(7,2)
+
+			--achar medico que trabalha no Turno respectivo � @hora solicitada
+			if (@hora < '11:00')--Periodo Manha
+			begin
+				set @periodo = 'Manhã'
+			end
+			else if (@hora < '16:00')--Periodo Tarde
+			begin
+				set @periodo = 'Tarde'
+			end
+			else if (@hora < '21:00')--Periodo Noite
+			begin
+				set @periodo = 'Noite'
+			end
+
+			set @medico_rg = --medico aleatorio que nao tenha consulta nesse dia nessa hora
+			(select top 1 percent rg from medico where periodo = @periodo and especialidade = @especialidade and rg not in
+			(select medicoRg from consulta where dia = @dia and hora = @hora)
+			order by newid())
+
+			if (@medico_rg is null)--nao tem medico disponivel nessas condicoes
+			begin
+				raiserror('Erro ao Cadastrar Consulta: Nao ha medicos disponiveis; tente outro horario.', 16, 1)
+			end
+			else
+			begin		
+				--decidir o valor: se a consulta eh retorno ou nao
+				if ((select top 1 valor from consulta c
+					inner join medico m
+					on c.medicoRg = m.rg
+					where m.especialidade = @especialidade
+					and c.clienteRg = @cliente_rg
+					and (datediff(day, getdate() - 30, c.dia) >= 0)
+					order by c.id desc) > 0.0)
+				begin
+					set @valor = 0.0
+				end
+				else
+				begin
+					set @valor = (select valor_consulta from medico where rg = @medico_rg)
+					--se for pelo Plano de Saude, o Plano para 50% do valor, por exemplo
+					if (@particular = 1)
+					begin
+						set @valor = @valor * 0.5
+					end
+				end
+				begin try
+					insert into consulta values
+					(@cliente_rg, @medico_rg, @dia, @hora, @particular, @valor, @codigo_autorizacao)
+					set @saida = 'Consulta com medico de RG: '+@medico_rg+', as '+cast(@hora as varchar(5))+' em '+convert(char(10), @dia, 103)+'.'
+				end try
+				begin catch
+					raiserror('Erro desconhecido ao Cadastrar Consulta', 16, 1)
+				end catch
+			end
+		end
+	end
+	else
+	begin
+		raiserror('Opcao invalida', 16, 1)
+	end
 
 --===============================================================================
 
