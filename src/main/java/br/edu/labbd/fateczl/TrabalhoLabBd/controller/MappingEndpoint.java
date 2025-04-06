@@ -232,6 +232,39 @@ public class MappingEndpoint {
 		}
 		return "cadastrar_cliente";
 	}
+	@GetMapping("/crudClienteGet")
+	public String crudClienteGet(@RequestParam Map<String, String> params, ModelMap model) throws SQLException, ClassNotFoundException {
+		String acao = params.get("acao");
+		String rg = params.get("rg");
+		
+		ClienteDao cDao = new ClienteDao(gDAO);
+		Cliente cliente = new Cliente();
+		List<Cliente> clientes = new ArrayList<>();
+		String erro = "";
+		try {
+			if (rg != null) {
+				cliente.setRg(rg);
+				if (acao.equals("excluir")) {
+					cDao.excluir(cliente);
+					clientes = cDao.listar();
+					cliente = null;
+				} else if (acao.equals("editar")) {
+					cliente = cDao.buscar(cliente);
+					clientes = null;
+				} else {
+					cliente = null;
+					clientes = null;
+				}				
+			}
+		} catch (SQLException | ClassNotFoundException e ){
+			erro = e.getMessage();
+		} finally {
+			model.addAttribute("erro", erro);
+			model.addAttribute("cliente", cliente);
+			model.addAttribute("clientes", clientes);
+		}
+		return "cadastrar_cliente";
+	}
 	
 	@PostMapping("/salvarEspecialidade")
 	public String salvarEspecialidade(@RequestParam Map<String, String> params,Model model) throws ClassNotFoundException, SQLException {

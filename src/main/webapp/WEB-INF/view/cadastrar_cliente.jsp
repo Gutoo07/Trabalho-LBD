@@ -20,7 +20,7 @@
         <label>RG:</label> <input type="text" name="rg" value='<c:out value="${cliente.rg }" />'><br>
         <label>Nome:</label> <input type="text" name="nome" value='<c:out value="${cliente.nome }" />'><br>        
         <label>Telefone:</label> <input type="text" name="telefone" value='<c:out value="${cliente.telefone }" />'><br>
-        <label>Data de Nascimento:</label> <input type="date" name="dataNascimento" value='<c:out value="${cliente.dt_nascStr }" />'><br>
+        <label>Data de Nascimento:</label> <input type="date" name="dataNascimento" value='<c:out value="${cliente.dt_nasc }" />'><br>
         <label>Senha:</label> <input type="text" name="senha" value='<c:out value="${cliente.senha }" />'><br>
         
         <table>

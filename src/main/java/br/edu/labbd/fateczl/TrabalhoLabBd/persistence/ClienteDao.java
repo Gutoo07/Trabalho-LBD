@@ -76,7 +76,7 @@ public class ClienteDao implements IDAO<Cliente> {
 		cs.setString(2, c.getRg());
 		cs.setNull(3, Types.VARCHAR);
 		cs.setNull(4, Types.VARCHAR);
-		cs.setNull(5, Types.DECIMAL);
+		cs.setNull(5, Types.VARCHAR);
 		cs.setNull(6, Types.VARCHAR);
 		cs.registerOutParameter(7, Types.VARCHAR);
 		cs.execute();
