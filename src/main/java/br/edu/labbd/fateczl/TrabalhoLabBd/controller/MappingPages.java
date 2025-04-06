@@ -33,10 +33,8 @@ public class MappingPages {
 	
 	@GetMapping("/")
 	public String home(Model model) throws ClassNotFoundException, SQLException {
-
 		return "index";
 	}
-	
 	
 	//MÉDICO
 	@GetMapping("/visualizar")

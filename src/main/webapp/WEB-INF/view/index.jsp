@@ -16,7 +16,7 @@
 
 		
 		<c:if test="${value == 0}">
-		    <h2 style="color: red;">FALHA NO LOGIN AMIGÃO!</h2>
+		    <h2 style="color: red;">Usuário ou Senha incorretos, Tente novamente!</h2>
 		</c:if>
 		<c:if test="${value == 1}">
 		    <script>window.location.href = "/consultas"</script>

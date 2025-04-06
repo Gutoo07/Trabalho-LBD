@@ -36,7 +36,7 @@ h2 {
 form {
     display: flex;
     flex-direction: column;
-	margin-bottom: 50px;
+	margin-bottom: 25px;
 }
 
 label {
@@ -65,7 +65,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-	margin-bottom: 200px;
+	margin-bottom: 20px;
 }
 
 th, td {
@@ -122,6 +122,6 @@ hr { width:100%; height:1px; background: #000000 }
     justify-content: space-between;
 }
 
-form {
-	margin-bottom: 100px;
-}
+
+
+

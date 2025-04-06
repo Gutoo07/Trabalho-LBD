@@ -24,8 +24,8 @@
 			
 				<h2>Especialidades Cadastradas</h2>
 				<c:if test="${!erro.isEmpty() == true}">
-								    <h2 style="color: red;">${erro}</h2>
-							</c:if>
+					<h2 style="color: red;">${erro}</h2>
+				</c:if>
 				<tr><th>Id</th><th>Nome</th><th>Editar</th><th>Excluir</th></tr>
 				<c:forEach var="lista" items="${lista_especialidade}">
 		        <tr>
@@ -50,6 +50,7 @@
 		function editLabels(id,nome){
 			document.getElementsByClassName("id")[0].value = id
 			document.getElementsByClassName("nome")[0].value = nome
+			window.scrollTo(0, 0);
 		}
 		
 		function enviarDados(id,nome) {

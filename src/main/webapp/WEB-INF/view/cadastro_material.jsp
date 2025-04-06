@@ -21,6 +21,9 @@
         <form>
             <table border="1">
                 <h2>Materiais Cadastrados</h2>
+				<c:if test="${!erro.isEmpty() == true}">
+					<h2 style="color: red;">${erro}</h2>
+				</c:if>
                 <tr><th>Id</th><th>Nome</th><th>Preço</th><th>Editar</th><th>Excluir</th></tr>
 				<c:forEach var="lista" items="${lista_material}">
 				    <tr>
@@ -50,6 +53,7 @@
 				document.getElementsByClassName("id")[0].value = id
 				document.getElementsByClassName("nome")[0].value = nome
 				document.getElementsByClassName("valor")[0].value = valor
+				window.scrollTo(0, 0);
 			}
 			
 			function enviarDados(id,nome,valor) {

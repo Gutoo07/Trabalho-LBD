@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.LoginRequest;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Material;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.AuthDao;
@@ -31,14 +32,16 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class MappingEndpoint {
+public class LoginController {
 	
 	GenericDAO gDAO = new GenericDAO();
 	
 	@PostMapping("/checkLogin")
 	public String AuthCheck(@RequestParam String rg, @RequestParam String password, Model model, HttpServletResponse response, @CookieValue(value = "user", defaultValue = "") String c) throws ClassNotFoundException, SQLException {
 	    AuthDao db = new AuthDao();
-	    int value = db.checkLogin(rg, password);
+	    LoginRequest loginRequest = new LoginRequest(rg,password);
+	    int value = db.checkLogin(loginRequest);
+	    
 	    System.out.println(value);
 	    System.out.println(c.isEmpty());
 	    

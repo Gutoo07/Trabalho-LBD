@@ -7,18 +7,20 @@ import java.sql.Types;
 
 import org.springframework.stereotype.Repository;
 
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.LoginRequest;
+
 @Repository
 public class AuthDao {
 	
 	private GenericDAO gDAO = new GenericDAO();
 
-	public int checkLogin(String rg, String password) throws SQLException, ClassNotFoundException{
+	public int checkLogin(LoginRequest loginRequest) throws SQLException, ClassNotFoundException{
 		
 		Connection con = gDAO.getConnection();
 		String sql = "{CALL sp_valida_login(?,?,?)}";
 		CallableStatement cs = con.prepareCall(sql);
-		cs.setString(1, rg);
-		cs.setString(2, password);
+		cs.setString(1, loginRequest.getRg());
+		cs.setString(2, loginRequest.getPassword());
 		cs.registerOutParameter(3, Types.INTEGER);
 		cs.execute();
 		
