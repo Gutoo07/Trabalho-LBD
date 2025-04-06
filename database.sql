@@ -700,3 +700,7 @@ SELECT * FROM medico
 SELECT * FROM material
 SELECT * FROM consulta
 SELECT * FROM consulta_material
+
+
+
+-- EAE GU
