@@ -16,9 +16,20 @@
     <form action="/visualizar">
         <h2>Histórico de Consultas</h2>
         <table border="1">
-            <tr><th>Data</th><th>Especialidade</th><th>Médico</th></tr>
+            <tr><th>Data</th><th>Hora</th><th>Especialidade</th><th>Médico</th><th>Valor</th></tr>
 			<c:forEach var="consulta" items="${lista_consulta}">
-	            <tr><td>${consulta.getDia()}</td><td>${consulta.getMedicoRg().getEspecialidade().getNome()}</td><td>${consulta.getMedicoRg().getNome()}</td></tr>
+	            <tr>
+	            <td>${consulta.getDia()}</td>
+	            <td>${consulta.getHora()}</td>
+	            <td>${consulta.getMedicoRg().getEspecialidade().getNome()}</td>
+	            <td>${consulta.getMedicoRg().getNome()}</td>
+	            <c:if test="${consulta.getValor() == 0 }">
+	            	<td>Retorno</td>
+	            </c:if>
+	            <c:if test="${consulta.getValor() > 0 }">
+	         		<td>${consulta.getValor() }</td>	            	
+	            </c:if>
+	            </tr>
 			</c:forEach>
         </table>
     </form>

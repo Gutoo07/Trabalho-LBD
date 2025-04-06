@@ -625,6 +625,10 @@ as
 		begin
 			raiserror('Erro ao Cadastrar Consulta: a data escolhida ultrapassa o intervalo maximo de 30 dias a partir de hoje.', 16, 1)
 		end
+		else if (datediff(day, getdate(), @dia) < 0)
+		begin
+			raiserror('Erro ao Cadastrar Consulta: a data selecionada é anterior ao dia de hoje', 16, 1)
+		end
 		else
 		begin
 			declare @medico_rg char(9),
@@ -705,7 +709,7 @@ as
 	inner join cliente cl
 	on c.clienteRg = cl.rg
 	where m.rg = @rg or cl.rg = @rg
-	ORDER BY dia DESC
+	ORDER BY dia DESC, hora DESC
 
 exec sp_ver_consultas '987654321'
 
@@ -718,6 +722,8 @@ SELECT * FROM material
 SELECT * FROM consulta
 SELECT * FROM consulta_material
 
+delete from consulta
 
 
--- EAE GU
+
+select datediff(day, getdate(), '05/04/2025')

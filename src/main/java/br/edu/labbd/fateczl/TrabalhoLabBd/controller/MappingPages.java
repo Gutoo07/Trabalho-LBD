@@ -49,41 +49,6 @@ public class MappingPages {
 		model.addAttribute("lista_consulta", consultas);
 		return "visualizar_consultas";
 	}
-	
-	
-	//CLIENTE
-	@GetMapping("/consultas")
-	public String consultas(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo,@CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
-		if(!tipo.equals("cliente")){
-			return "404";
-		}
-		ConsultaDao db = new ConsultaDao(gDAO);
-		List<Consulta> consultas = db.sp_ver_consultas(rg);
-		
-		
-		//new Consulta().getMedicoRg().getNome();
-		//Debug pra teste pode apagar dps, inclusive o parametro passado na função
-		System.out.println(request.getHeader("Cookie"));
-		
-		model.addAttribute("lista_consulta", consultas);
-		
-	
-		
-		
-		return "historico_consulta";
-	}
-	
-	@GetMapping("/agendar")
-	public String agendar(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, Model model) throws ClassNotFoundException, SQLException {
-		if(!tipo.equals("cliente")){
-			return "404";
-		}
-		EspecialidadeDao eDao = new EspecialidadeDao(gDAO);
-		List<Especialidade> lista = eDao.getAll();
-
-		model.addAttribute("listaEspecialidade",lista);
-		return "agendar_consulta";
-	}
 	@GetMapping("medicos")
 	public String cadastrarMedico(@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, @CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
 		if(!tipo.equals("medico")){
