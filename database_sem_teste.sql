@@ -577,3 +577,6 @@ as
 	begin
 		raiserror('Opcao invalida', 16, 1)
 	end
+
+
+-- TESTE GIT PULL
