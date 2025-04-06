@@ -233,8 +233,26 @@ public class MappingEndpoint {
 		return "cadastrar_cliente";
 	}
 	
+	@PostMapping("/salvarEspecialidade")
+	public String salvarEspecialidade(@RequestParam Map<String, String> params,Model model) throws ClassNotFoundException, SQLException {
+	
+		EspecialidadeDao eDao = new EspecialidadeDao(gDAO);
+		Especialidade especialidade = new Especialidade();
+		especialidade.setId(Integer.parseInt(params.get("id")));
+		especialidade.setNome(params.get("nome"));
+		try {
+			eDao.inserir(especialidade);
+		}catch(SQLException error) {
+			if(error.getMessage().contains("Erro ao Inserir Especialidade: ID ja existe.")) {
+				System.out.println("VAI TOMA NO CU");
+			}
+		}
+		model.addAttribute("lista_especialidade",eDao.getAll());
+		return "cadastro_especialidade";
+	}
+	
 	@PostMapping("/deleteEspecialidade")
-	public String teste(@RequestBody Especialidade especialidade, Model model) throws ClassNotFoundException, SQLException {
+	public String deleteEspecialidade(@RequestBody Especialidade especialidade, Model model) throws ClassNotFoundException, SQLException {
 	
 		try {
 			

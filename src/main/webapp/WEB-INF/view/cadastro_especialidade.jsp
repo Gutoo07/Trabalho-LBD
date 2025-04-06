@@ -12,10 +12,10 @@
 <body>
     <div class="body_div">
 		<jsp:include page="menu_medico.jsp"></jsp:include>
-        <form>
+        <form action="/salvarEspecialidade" method="POST">
             <h2>Cadastrar Especialidade</h2>
-			<label>Id da Especialidade:</label> <input class="id" type="number" name="id_especialidade"><br>
-            <label>Nome da Especialidade:</label> <input class="nome" type="text" name="nome_especialidade"><br>
+			<label>Id da Especialidade:</label> <input class="id" type="number" name="id"><br>
+            <label>Nome da Especialidade:</label> <input class="nome" type="text" name="nome"><br>
             <button type="submit">Salvar</button>
         </form>
 		<form>
@@ -68,7 +68,9 @@
 				
 			  return response.text(); // pega HTML como string
 			}).then(html => {
+				document.open();
 				document.write(html);
+				document.close();      
 			})
 
 	

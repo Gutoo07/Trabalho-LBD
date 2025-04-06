@@ -26,21 +26,35 @@ public class EspecialidadeDao {
 	}
 
 	
-	/*public String inserir(Especialidade c) throws SQLException, ClassNotFoundException {
+	public String inserir(Especialidade c) throws SQLException, ClassNotFoundException {
 		Connection con = gDAO.getConnection();
-		String sql = "{CALL sp_cliente(?,?,?,?,?,?,?)}";
-		CallableStatement cs = con.prepareCall(sql);
-		cs.setString(1, "I");
-		cs.setString(2, c.getRg());
-		cs.registerOutParameter(7, Types.VARCHAR);
-		cs.execute();
+		String saida = "";
+		try {
+			String sql = "{CALL sp_especialidade(?,?,?,?)}";
+			CallableStatement cs = con.prepareCall(sql);
+			cs.setString(1, "I");
+			cs.setInt(2,  c.getId());
+			cs.setString(3, c.getNome());
+			cs.registerOutParameter(4, Types.VARCHAR);
+			cs.execute();
+			saida = cs.getString(4);
+			cs.close();
+		}catch(Exception error){
+			String sql = "{CALL sp_especialidade(?,?,?,?)}";
+			CallableStatement cs = con.prepareCall(sql);
+			cs.setString(1, "U");
+			cs.setInt(2,  c.getId());
+			cs.setString(3, c.getNome());
+			cs.registerOutParameter(4, Types.VARCHAR);
+			cs.execute();
+			saida = cs.getString(4);
+		}finally{
+			
+			con.close();
+		}
 		
-		String saida = cs.getString(7);
-		
-		cs.close();
-		con.close();
 		return saida;
-	}*/
+	}
 	
 	public String deleteById(int id) throws SQLException, ClassNotFoundException {
 	    Connection con = gDAO.getConnection();
