@@ -22,6 +22,7 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ClienteDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ConsultaDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.EspecialidadeDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.GenericDAO;
+import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.MaterialDao;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -114,6 +115,19 @@ public class MappingPages {
 		
 		
 		return "cadastro_especialidade";
+	}
+	
+	@GetMapping("material")
+	public String cadastrarMaterial (@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, @CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
+		if(!tipo.equals("medico")){
+			return "404";
+		}
+		
+		MaterialDao db = new MaterialDao(gDAO);
+		model.addAttribute("lista_material",db.getAll());
+		
+		
+		return "cadastro_material";
 	}
 	
 	

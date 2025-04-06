@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.Material;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.AuthDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ClienteDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.ConsultaDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.EspecialidadeDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.GenericDAO;
+import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.MaterialDao;
 import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.MedicoDao;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -276,9 +278,7 @@ public class MappingEndpoint {
 		try {
 			eDao.inserir(especialidade);
 		}catch(SQLException error) {
-			if(error.getMessage().contains("Erro ao Inserir Especialidade: ID ja existe.")) {
-				System.out.println("VAI TOMA NO CU");
-			}
+
 		}
 		model.addAttribute("lista_especialidade",eDao.getAll());
 		return "cadastro_especialidade";
@@ -302,5 +302,40 @@ public class MappingEndpoint {
 		
 		return "cadastro_especialidade";
 	}
+	
+	@PostMapping("/salvarMaterial")
+	public String salvarMaterial(@RequestParam Map<String, String> params,Model model) throws ClassNotFoundException, SQLException {
+	
+		MaterialDao eDao = new MaterialDao(gDAO);
+		Material especialidade = new Material();
+		especialidade.setId(Integer.parseInt(params.get("id")));
+		especialidade.setNome(params.get("nome"));
+		especialidade.setValor(Double.parseDouble(params.get("valor")));
+		try {
+			eDao.inserir(especialidade);
+		}catch(SQLException error) {
+		
+		}
+		model.addAttribute("lista_material",eDao.getAll());
+		return "cadastro_material";
+	}
+	
+	@PostMapping("/deleteMaterial")
+	public String deleteMaterial(@RequestBody Material material, Model model) throws ClassNotFoundException, SQLException {
+
+	    try {
+	        MaterialDao dao = new MaterialDao(gDAO);
+	        dao.deleteById(material.getId());
+	    } catch (Exception e) {
+	        model.addAttribute("erro", "Não foi possível excluir o material. Verifique se ele está vinculado a outro registro.");
+	        System.out.println("ERRO AO DELETAR MATERIAL!");
+	    }
+
+	    MaterialDao dao = new MaterialDao(gDAO);
+	    model.addAttribute("lista_material", dao.getAll());
+
+	    return "cadastro_material";
+	}
+
 		
 }
