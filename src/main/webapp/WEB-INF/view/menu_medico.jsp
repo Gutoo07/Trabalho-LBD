@@ -17,8 +17,8 @@
             <!-- <a href="cadastro_paciente.html">Clientes</a> -->
             <a href="/medicos">Médicos</a>
             <!-- <a href="cadastro_medico.html">Médicos</a>  -->
-            <a href="cadastro_especialidade.html">Especialidades</a>
-            <a href="cadastro_material.html">Materiais</a>
+            <a href="/especialidades">Especialidades</a>
+            <a href="/cadastro_material">Materiais</a>
         </div>
         <div>
 			<a style="cursor: pointer" onclick="logout()">Sair</a>

@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Consulta;
 import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
 
@@ -24,6 +25,48 @@ public class EspecialidadeDao {
 		this.gDAO = gDAO;
 	}
 
+	
+	/*public String inserir(Especialidade c) throws SQLException, ClassNotFoundException {
+		Connection con = gDAO.getConnection();
+		String sql = "{CALL sp_cliente(?,?,?,?,?,?,?)}";
+		CallableStatement cs = con.prepareCall(sql);
+		cs.setString(1, "I");
+		cs.setString(2, c.getRg());
+		cs.registerOutParameter(7, Types.VARCHAR);
+		cs.execute();
+		
+		String saida = cs.getString(7);
+		
+		cs.close();
+		con.close();
+		return saida;
+	}*/
+	
+	public String deleteById(int id) throws SQLException, ClassNotFoundException {
+	    Connection con = gDAO.getConnection();
+	    String saida = "";
+
+	    String sql = "{CALL sp_especialidade(?, ?, ?, ?)}";
+	    CallableStatement cs = con.prepareCall(sql);
+	    cs.setString(1, "D");
+	    cs.setInt(2, id);
+	    cs.setNull(3, Types.VARCHAR);
+	    cs.registerOutParameter(4, Types.VARCHAR);
+
+	    try {
+	        cs.execute();
+	        saida = cs.getString(4);
+	    } catch (SQLException e) {
+	        throw e;
+	    } finally {
+	        cs.close();
+	        con.close();
+	    }
+
+	    return saida;
+	}
+
+	
 	public Especialidade getById(int id) throws SQLException, ClassNotFoundException{
 		Connection con = gDAO.getConnection();
 		String sql = "SELECT * FROM especialidade WHERE id = ?";

@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -230,6 +231,25 @@ public class MappingEndpoint {
 			model.addAttribute("clientes", clientes);
 		}
 		return "cadastrar_cliente";
+	}
+	
+	@PostMapping("/deleteEspecialidade")
+	public String teste(@RequestBody Especialidade especialidade, Model model) throws ClassNotFoundException, SQLException {
+	
+		try {
+			
+			EspecialidadeDao db = new EspecialidadeDao(gDAO);
+			db.deleteById(especialidade.getId());
+		}catch(Exception exception){
+			model.addAttribute("erro","Existe um médico Vinculado a Especialidade!");
+			System.out.println("JA TEM UM MÉDICO VINCULADO!");
+		}
+		
+		EspecialidadeDao db = new EspecialidadeDao(gDAO);
+		model.addAttribute("lista_especialidade",db.getAll());
+		
+		
+		return "cadastro_especialidade";
 	}
 		
 }

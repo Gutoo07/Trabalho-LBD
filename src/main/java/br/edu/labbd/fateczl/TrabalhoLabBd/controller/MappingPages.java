@@ -102,4 +102,19 @@ public class MappingPages {
 		}
 		return "cadastrar_cliente";
 	}
+	
+	@GetMapping("especialidades")
+	public String cadastrarEspecialidade (@CookieValue(value = "tipo", defaultValue = "desconhecido") String tipo, @CookieValue(value = "user", defaultValue = "desconhecido") String rg, HttpServletRequest request, Model model) throws ClassNotFoundException, SQLException {
+		if(!tipo.equals("medico")){
+			return "404";
+		}
+		
+		EspecialidadeDao db = new EspecialidadeDao(gDAO);
+		model.addAttribute("lista_especialidade",db.getAll());
+		
+		
+		return "cadastro_especialidade";
+	}
+	
+	
 }
