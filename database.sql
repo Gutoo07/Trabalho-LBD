@@ -143,17 +143,7 @@ print @valido
 
 --=============================================================
 
-	
---testes
-declare @valido int
-exec sp_valida_login '123', 'senha1234', @valido output --RG nao cadastrado
-print @valido
-exec sp_valida_login '538227679', 'senha1234', @valido output --senha correta
-print @valido
-exec sp_valida_login '538227679', 'aaa', @valido output --senha incorreta
-print @valido
-
---PROCEDURE DE VALIDAR LOGIN NOVA (VALIDA SE EH ADM [MEDICO] OU COMUM [CLIENTE])
+--PROCEDURE DE VALIDAR LOGIN NOVA
 create procedure sp_valida_login (@rg char(9), @senha varchar(35), @login_valido int output)
 as
 	set @login_valido = 0 --comeca invalido
@@ -179,10 +169,6 @@ as
 declare @login_valido int
 exec sp_valida_login '443442356', 'medico1senha2', @login_valido output
 print @login_valido
-
-select * from cliente
-select * from medico
-select * from especialidade
 
 declare @saida varchar(100)
 exec sp_medico  'i', '443442356', 'Medico 1', '11988884444', 'Tarde', 325.0, 1, 'medico1senha2', @saida output
@@ -367,11 +353,7 @@ declare @saida varchar(100)
 exec sp_cliente 'i', '31142547', 'Lucas', '11933334444', '03/03/2003', 'senhamarcelo3', @saida output
 print @saida
 
-select * from cliente
-
 --=============================================================
-select * from medico
-
 create procedure sp_medico	(@opc char(1), @rg char(9), @nome varchar(100), @telefone varchar(11), @periodo varchar(5),
 							@valor_consulta decimal(7,2), @especialidade int, @senha varchar(35), @saida varchar(100) output)
 as
@@ -495,9 +477,7 @@ declare @saida varchar(100)
 exec sp_medico 'i', '289728137', 'Medico 6', '11988889999', 'Noite', 300.0, 2, @saida output
 print @saida
 
-select * from medico
 --=============================================================
-
 create procedure sp_especialidade (@opc char(1), @id int, @nome varchar(30), @saida varchar(100) output)
 as
 	if(upper(@opc) = 'I')
@@ -555,7 +535,6 @@ as
 	end
 
 --=============================================================
-
 create procedure sp_material (@opc char(1), @id int, @nome varchar(30), @valor decimal(7,2), @saida varchar(100) output)
 as
 	if(upper(@opc) = 'I')
@@ -697,7 +676,6 @@ as
 	end
 
 --===============================================================================
-
 create procedure sp_ver_consultas (@rg char(9))
 as
 	select c.id as consulta_id, c.particular, c.valor, c.cod_autorizacao, m.nome as nome_medico, cl.nome as nome_cliente, e.nome as nome_especialidade, convert(char(10),c.dia, 103) as dia, cast(c.hora as varchar(5)) as hora
@@ -711,19 +689,4 @@ as
 	where m.rg = @rg or cl.rg = @rg
 	ORDER BY dia DESC, hora DESC
 
-exec sp_ver_consultas '987654321'
-
 --===============================================================================
-
-SELECT * FROM cliente
-SELECT * FROM especialidade
-SELECT * FROM medico
-SELECT * FROM material
-SELECT * FROM consulta
-SELECT * FROM consulta_material
-
-delete from consulta
-
-
-
-select datediff(day, getdate(), '05/04/2025')

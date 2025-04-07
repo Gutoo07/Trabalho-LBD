@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class ClienteController {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para acoes do Cliente*/
+	
 	private GenericDAO gDAO = new GenericDAO();
 
 	//CLIENTE

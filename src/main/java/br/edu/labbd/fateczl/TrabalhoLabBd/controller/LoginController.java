@@ -34,6 +34,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class LoginController {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para Login*/
+	
 	GenericDAO gDAO = new GenericDAO();
 	
 	@PostMapping("/checkLogin")

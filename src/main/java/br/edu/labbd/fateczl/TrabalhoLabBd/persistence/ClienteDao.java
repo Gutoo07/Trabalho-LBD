@@ -18,6 +18,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Cliente;
 @Repository
 public class ClienteDao implements IDAO<Cliente> {
 	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Cliente*/
+	
 	private GenericDAO gDAO;
 	
 	//SOLID: Inversao de dependencia

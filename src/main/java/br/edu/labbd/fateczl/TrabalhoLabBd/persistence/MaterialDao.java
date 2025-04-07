@@ -19,6 +19,9 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Material;
 
 @Repository
 public class MaterialDao {
+	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Material*/
+	
 	private GenericDAO gDAO;
 
 	//SOLID: Inversao de Dependencia

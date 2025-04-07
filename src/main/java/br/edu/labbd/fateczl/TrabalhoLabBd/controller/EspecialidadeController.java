@@ -16,6 +16,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.GenericDAO;
 @Controller
 public class EspecialidadeController {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para acoes de Especialidade*/
+	
 	GenericDAO gDAO = new GenericDAO();
 
 	@PostMapping("/salvarEspecialidade")
@@ -42,12 +44,10 @@ public class EspecialidadeController {
 			db.deleteById(especialidade.getId());
 		}catch(Exception exception){
 			model.addAttribute("erro","Existe um médico Vinculado a Especialidade!");
-			System.out.println("JA TEM UM MÉDICO VINCULADO!");
 		}
 		
 		EspecialidadeDao db = new EspecialidadeDao(gDAO);
-		model.addAttribute("lista_especialidade",db.getAll());
-		
+		model.addAttribute("lista_especialidade",db.getAll());		
 		
 		return "cadastro_especialidade";
 	}

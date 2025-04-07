@@ -16,6 +16,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.persistence.MaterialDao;
 @Controller
 public class MaterialController {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para acoes de Material*/
+	
 	GenericDAO gDAO = new GenericDAO();
 
 	@PostMapping("/salvarMaterial")
@@ -42,7 +44,6 @@ public class MaterialController {
 	        dao.deleteById(material.getId());
 	    } catch (Exception e) {
 	        model.addAttribute("erro", "Não foi possível excluir o material. Verifique se ele está vinculado a outro registro.");
-	        System.out.println("ERRO AO DELETAR MATERIAL!");
 	    }
 
 	    MaterialDao dao = new MaterialDao(gDAO);

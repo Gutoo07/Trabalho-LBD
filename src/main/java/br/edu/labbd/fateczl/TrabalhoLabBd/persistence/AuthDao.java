@@ -12,6 +12,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.LoginRequest;
 @Repository
 public class AuthDao {
 	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Login*/
+	
 	private GenericDAO gDAO = new GenericDAO();
 
 	public int checkLogin(LoginRequest loginRequest) throws SQLException, ClassNotFoundException{

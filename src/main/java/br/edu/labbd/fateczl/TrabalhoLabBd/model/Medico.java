@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data /*monta os Getters, Setters, toString...*/
+@Data 
 @AllArgsConstructor
 @NoArgsConstructor
 public class Medico {

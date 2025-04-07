@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class MedicoController {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para acoes do Medico*/
+	
 	GenericDAO gDAO = new GenericDAO();
 
 	@PostMapping("/crudMedicoPost")

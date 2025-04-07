@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data /*monta os Getters, Setters, toString...*/
+@Data 
 @AllArgsConstructor
 @NoArgsConstructor
 public class Especialidade {
 
 	private int id;
-	private String nome;
-	
+	private String nome;	
 
 	public int getId() {
 		return id;

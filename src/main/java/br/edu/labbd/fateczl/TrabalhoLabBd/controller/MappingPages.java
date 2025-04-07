@@ -29,6 +29,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class MappingPages {
 	
+	/*SOLID: Responsabilidade unica: controller especifico para mapeamento de paginas*/
+	
 	private GenericDAO gDAO = new GenericDAO();
 	
 	@GetMapping("/")

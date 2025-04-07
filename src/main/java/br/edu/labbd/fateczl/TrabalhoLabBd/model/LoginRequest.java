@@ -6,11 +6,7 @@ public class LoginRequest {
 	
 	private String rg;
 	private String password;
-	
-	public LoginRequest(String rg, String password) {
-		this.rg = rg;
-		this.password = password;
-	}
+
 	public String getRg() {
 		return rg;
 	}
@@ -23,8 +19,4 @@ public class LoginRequest {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
-	
-	
 }

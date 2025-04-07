@@ -18,6 +18,9 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Especialidade;
 
 @Repository
 public class EspecialidadeDao {
+	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Especialidade*/
+	
 	private GenericDAO gDAO;
 
 	//SOLID: Inversao de Dependencia

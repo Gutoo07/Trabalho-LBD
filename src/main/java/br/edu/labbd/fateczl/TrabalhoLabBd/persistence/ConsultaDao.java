@@ -20,6 +20,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 @Repository
 public class ConsultaDao {
 	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Consulta*/
+	
 	private GenericDAO gDAO;
 
 	//SOLID: Inversao de Dependencia

@@ -19,6 +19,8 @@ import br.edu.labbd.fateczl.TrabalhoLabBd.model.Medico;
 @Repository
 public class MedicoDao {
 	
+	/*SOLID: Responsabilidade unica: classe de persistencia especifica para Medico*/
+	
 	private GenericDAO gDAO;
 	
 	//SOLID: inversao de dependencia
